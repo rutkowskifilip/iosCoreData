@@ -64,6 +64,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         let action2 = UIContextualAction(style: .normal, title: "Edit") {(action2, view, completionHandler) in
+         
             self.alert = UIAlertController(title: "Edytuj osobę:", message: "",                                      preferredStyle: .alert)
             self.alert.addTextField(configurationHandler: { textField in
                 textField.placeholder = "PESEL"
@@ -82,16 +83,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.pesel = self.alert.textFields?[0]
             self.name = self.alert.textFields?[1]
             self.surname = self.alert.textFields?[2]
+//            items[indexPath.row] =
             self.pesel.addTarget(self, action: #selector(self.checkData), for: UIControl.Event.editingChanged)
             self.name.addTarget(self, action: #selector(self.checkData), for: UIControl.Event.editingChanged)
             self.surname.addTarget(self, action: #selector(self.checkData), for: UIControl.Event.editingChanged)
             
             self.save = UIAlertAction(title: "Zapisz", style: .default, handler: { [weak alert = self.alert] (_) in
-                var pesel = self.alert!.textFields![0].text
-                let peselLenght = pesel?.count == 11
                 
-                
-                
+                self.items?[indexPath.row].pesel = self.alert!.textFields![0].text
+                self.items?[indexPath.row].name = self.alert!.textFields![1].text
+                self.items?[indexPath.row].surname = self.alert!.textFields![2].text
+//
 //                let newPerson = Persons(context: self.context)
 //                newPerson.pesel = self.alert!.textFields![0].text
 //                newPerson.name = self.alert!.textFields![1].text
@@ -145,9 +147,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.pesel = alert.textFields?[0]
         self.name = alert.textFields?[1]
         self.surname = alert.textFields?[2]
-        pesel.addTarget(self, action: #selector(checkData), for: UIControl.Event.editingChanged)
-        name.addTarget(self, action: #selector(checkData), for: UIControl.Event.editingChanged)
-        surname.addTarget(self, action: #selector(checkData), for: UIControl.Event.editingChanged)
+        self.pesel.addTarget(self, action: #selector(checkData), for: UIControl.Event.editingChanged)
+        self.name.addTarget(self, action: #selector(checkData), for: UIControl.Event.editingChanged)
+        self.surname.addTarget(self, action: #selector(checkData), for: UIControl.Event.editingChanged)
         
         self.save = UIAlertAction(title: "Zapisz", style: .default, handler: { [weak alert] (_) in
             var pesel = alert!.textFields![0].text
@@ -194,8 +196,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             for i in 0...9{
                 sum += (Int(peselArr[i]) ?? 0)*arr[i]%10
             }
+            print(sum)
             sum = sum % 10
-            if(10 - sum == Int(peselArr[10])){
+            if((10 - sum)%10 == Int(peselArr[10])){
                 save.isEnabled = true
             }
             
